@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universal Finance Calculator by Amit Godwin Kullu</title>
+  <meta name="description" content="Free EMI, SIP, and Loan Eligibility Calculator for Indian users. Calculate Home Loan, Personal Loan, Car Loan EMI and Mutual Fund SIP returns instantly." />
+  <meta name="keywords" content="loan calculator India, EMI calculator, SIP calculator India, mutual fund calculator, home loan EMI, personal loan calculator, car loan EMI, loan eligibility calculator" />
+  <meta name="author" content="Amit Godwin Kullu" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Universal Finance Calculator by Amit Godwin Kullu" />
+  <meta property="og:description" content="Free EMI, SIP, and Loan Eligibility Calculator for Indian users." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/0f172a/22d3ee?text=Universal+Finance+Calculator" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is EMI calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "EMI = [P × R × (1+R)^N] / [(1+R)^N - 1], where P = Principal, R = Monthly Interest Rate, N = Number of months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is SIP calculator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A SIP (Systematic Investment Plan) calculator helps estimate the returns on monthly mutual fund investments over a period using compound interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much home loan am I eligible for?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Typically, banks offer home loans up to 60x your net monthly income, subject to existing obligations and FOIR (Fixed Obligation to Income Ratio) of around 40-50%."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="dark-mode" data-lang="en">
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <div class="brand">
+        <span class="brand-icon">₹</span>
+        <div class="brand-text">
+          <h1 class="brand-name" data-en="Universal Finance Calculator" data-hi="यूनिवर्सल फाइनेंस कैलकुलेटर">Universal Finance Calculator</h1>
+          <p class="brand-sub" data-en="by Amit Godwin Kullu" data-hi="अमित गॉडविन कुल्लू द्वारा">by Amit Godwin Kullu</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button class="lang-toggle" id="langToggle" title="Switch Language">
+          <span class="lang-flag">🇬🇧</span>
+          <span class="lang-label" id="langLabel">EN</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN NAV ===== -->
+  <nav class="main-nav" role="navigation" aria-label="Main categories">
+    <div class="container">
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="loans" data-en="🏦 Loan Calculators" data-hi="🏦 लोन कैलकुलेटर">🏦 Loan Calculators</button>
+        <button class="nav-tab" data-tab="mf" data-en="📈 Mutual Fund" data-hi="📈 म्यूचुअल फंड">📈 Mutual Fund</button>
+        <button class="nav-tab" data-tab="rates" data-en="🏛️ Bank Rates" data-hi="🏛️ बैंक दरें">🏛️ Bank Rates</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="site-main container" role="main">
+
+    <!-- ============ LOAN SECTION ============ -->
+    <section id="loans-section" class="calc-section active" aria-label="Loan Calculators">
+      <div class="section-header">
+        <h2 data-en="Loan Calculators" data-hi="लोन कैलकुलेटर">Loan Calculators</h2>
+        <p data-en="Calculate EMI for all types of loans" data-hi="सभी प्रकार के लोन के लिए EMI कैलकुलेट करें">Calculate EMI for all types of loans</p>
+      </div>
+      <div class="sub-tabs">
+        <button class="sub-tab active" data-sub="home-loan" data-en="🏠 Home Loan" data-hi="🏠 होम लोन">🏠 Home Loan</button>
+        <button class="sub-tab" data-sub="personal-loan" data-en="👤 Personal" data-hi="👤 पर्सनल">👤 Personal</button>
+        <button class="sub-tab" data-sub="car-loan" data-en="🚗 Car Loan" data-hi="🚗 कार लोन">🚗 Car Loan</button>
+        <button class="sub-tab" data-sub="eligibility" data-en="✅ Eligibility" data-hi="✅ पात्रता">✅ Eligibility</button>
+      </div>
+
+      <!-- HOME LOAN -->
+      <article id="home-loan" class="calc-card sub-section active">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="Home Loan EMI Calculator" data-hi="होम लोन EMI कैलकुलेटर">Home Loan EMI Calculator</h3>
+            <div class="input-group">
+              <label data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">Loan Amount (₹)</label>
+              <input type="number" id="hl-amount" value="5000000" min="100000" max="100000000" step="50000" />
+              <input type="range" id="hl-amount-range" min="100000" max="100000000" step="50000" value="5000000" />
+              <span class="input-display" id="hl-amount-disp">₹50,00,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">Interest Rate (% p.a.)</label>
+              <input type="number" id="hl-rate" value="8.5" min="5" max="20" step="0.1" />
+              <input type="range" id="hl-rate-range" min="5" max="20" step="0.1" value="8.5" />
+              <span class="input-display" id="hl-rate-disp">8.5%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">Tenure (Years)</label>
+              <input type="number" id="hl-tenure" value="20" min="1" max="30" step="1" />
+              <input type="range" id="hl-tenure-range" min="1" max="30" step="1" value="20" />
+              <span class="input-display" id="hl-tenure-disp">20 yrs</span>
+            </div>
+            <div class="rate-hint">
+              <span data-en="💡 SBI Home Loan from 8.50% | HDFC from 8.70%" data-hi="💡 SBI होम लोन 8.50% से | HDFC 8.70% से">💡 SBI Home Loan from 8.50% | HDFC from 8.70%</span>
+            </div>
+            <button class="calc-btn" onclick="calcLoan('hl')" data-en="Calculate EMI" data-hi="EMI कैलकुलेट करें">Calculate EMI</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="hl-results">
+              <div class="result-card primary">
+                <span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">Monthly EMI</span>
+                <span class="result-value" id="hl-emi">₹43,391</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">Total Interest</span>
+                <span class="result-value" id="hl-interest">₹54,13,840</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">Total Payment</span>
+                <span class="result-value" id="hl-total">₹1,04,13,840</span>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="hl-chart"></canvas>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('hl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PERSONAL LOAN -->
+      <article id="personal-loan" class="calc-card sub-section">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="Personal Loan EMI Calculator" data-hi="पर्सनल लोन EMI कैलकुलेटर">Personal Loan EMI Calculator</h3>
+            <div class="input-group">
+              <label data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">Loan Amount (₹)</label>
+              <input type="number" id="pl-amount" value="500000" min="10000" max="5000000" step="10000" />
+              <input type="range" id="pl-amount-range" min="10000" max="5000000" step="10000" value="500000" />
+              <span class="input-display" id="pl-amount-disp">₹5,00,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">Interest Rate (% p.a.)</label>
+              <input type="number" id="pl-rate" value="12" min="8" max="30" step="0.5" />
+              <input type="range" id="pl-rate-range" min="8" max="30" step="0.5" value="12" />
+              <span class="input-display" id="pl-rate-disp">12%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">Tenure (Years)</label>
+              <input type="number" id="pl-tenure" value="3" min="1" max="7" step="1" />
+              <input type="range" id="pl-tenure-range" min="1" max="7" step="1" value="3" />
+              <span class="input-display" id="pl-tenure-disp">3 yrs</span>
+            </div>
+            <div class="rate-hint">
+              <span data-en="💡 HDFC Personal Loan from 10.50% | ICICI from 10.65%" data-hi="💡 HDFC पर्सनल लोन 10.50% से | ICICI 10.65% से">💡 HDFC Personal Loan from 10.50% | ICICI from 10.65%</span>
+            </div>
+            <button class="calc-btn" onclick="calcLoan('pl')" data-en="Calculate EMI" data-hi="EMI कैलकुलेट करें">Calculate EMI</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="pl-results">
+              <div class="result-card primary">
+                <span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">Monthly EMI</span>
+                <span class="result-value" id="pl-emi">₹16,607</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">Total Interest</span>
+                <span class="result-value" id="pl-interest">₹97,852</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">Total Payment</span>
+                <span class="result-value" id="pl-total">₹5,97,852</span>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="pl-chart"></canvas>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('pl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CAR LOAN -->
+      <article id="car-loan" class="calc-card sub-section">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="Car Loan EMI Calculator" data-hi="कार लोन EMI कैलकुलेटर">Car Loan EMI Calculator</h3>
+            <div class="input-group">
+              <label data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">Loan Amount (₹)</label>
+              <input type="number" id="cl-amount" value="800000" min="50000" max="10000000" step="50000" />
+              <input type="range" id="cl-amount-range" min="50000" max="10000000" step="50000" value="800000" />
+              <span class="input-display" id="cl-amount-disp">₹8,00,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">Interest Rate (% p.a.)</label>
+              <input type="number" id="cl-rate" value="9" min="7" max="18" step="0.5" />
+              <input type="range" id="cl-rate-range" min="7" max="18" step="0.5" value="9" />
+              <span class="input-display" id="cl-rate-disp">9%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">Tenure (Years)</label>
+              <input type="number" id="cl-tenure" value="5" min="1" max="7" step="1" />
+              <input type="range" id="cl-tenure-range" min="1" max="7" step="1" value="5" />
+              <span class="input-display" id="cl-tenure-disp">5 yrs</span>
+            </div>
+            <div class="rate-hint">
+              <span data-en="💡 SBI Car Loan from 8.75% | HDFC from 8.80%" data-hi="💡 SBI कार लोन 8.75% से | HDFC 8.80% से">💡 SBI Car Loan from 8.75% | HDFC from 8.80%</span>
+            </div>
+            <button class="calc-btn" onclick="calcLoan('cl')" data-en="Calculate EMI" data-hi="EMI कैलकुलेट करें">Calculate EMI</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="cl-results">
+              <div class="result-card primary">
+                <span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">Monthly EMI</span>
+                <span class="result-value" id="cl-emi">₹16,601</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">Total Interest</span>
+                <span class="result-value" id="cl-interest">₹1,96,060</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">Total Payment</span>
+                <span class="result-value" id="cl-total">₹9,96,060</span>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="cl-chart"></canvas>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('cl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- LOAN ELIGIBILITY -->
+      <article id="eligibility" class="calc-card sub-section">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="Loan Eligibility Calculator" data-hi="लोन पात्रता कैलकुलेटर">Loan Eligibility Calculator</h3>
+            <div class="input-group">
+              <label data-en="Monthly Income (₹)" data-hi="मासिक आय (₹)">Monthly Income (₹)</label>
+              <input type="number" id="el-income" value="80000" min="10000" max="1000000" step="5000" />
+              <input type="range" id="el-income-range" min="10000" max="1000000" step="5000" value="80000" />
+              <span class="input-display" id="el-income-disp">₹80,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Existing EMIs (₹)" data-hi="मौजूदा EMI (₹)">Existing EMIs (₹)</label>
+              <input type="number" id="el-emi" value="0" min="0" max="200000" step="1000" />
+              <input type="range" id="el-emi-range" min="0" max="200000" step="1000" value="0" />
+              <span class="input-display" id="el-emi-disp">₹0</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Expected Interest Rate (% p.a.)" data-hi="अपेक्षित ब्याज दर (% प्रति वर्ष)">Expected Interest Rate (% p.a.)</label>
+              <input type="number" id="el-rate" value="8.5" min="5" max="20" step="0.5" />
+              <input type="range" id="el-rate-range" min="5" max="20" step="0.5" value="8.5" />
+              <span class="input-display" id="el-rate-disp">8.5%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Desired Tenure (Years)" data-hi="वांछित अवधि (वर्ष)">Desired Tenure (Years)</label>
+              <input type="number" id="el-tenure" value="20" min="1" max="30" step="1" />
+              <input type="range" id="el-tenure-range" min="1" max="30" step="1" value="20" />
+              <span class="input-display" id="el-tenure-disp">20 yrs</span>
+            </div>
+            <button class="calc-btn" onclick="calcEligibility()" data-en="Check Eligibility" data-hi="पात्रता जांचें">Check Eligibility</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="el-results">
+              <div class="result-card primary">
+                <span class="result-label" data-en="Eligible Loan Amount" data-hi="पात्र लोन राशि">Eligible Loan Amount</span>
+                <span class="result-value" id="el-eligible">₹46,52,840</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Max Eligible EMI" data-hi="अधिकतम पात्र EMI">Max Eligible EMI</span>
+                <span class="result-value" id="el-max-emi">₹32,000</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="FOIR Used" data-hi="FOIR उपयोग">FOIR Used</span>
+                <span class="result-value" id="el-foir">40%</span>
+              </div>
+            </div>
+            <div class="eligibility-bar-wrap">
+              <div class="elig-label" data-en="Income utilization for loan repayment" data-hi="लोन चुकाने के लिए आय का उपयोग">Income utilization for loan repayment</div>
+              <div class="elig-bar">
+                <div class="elig-bar-fill" id="el-bar" style="width:40%"></div>
+              </div>
+              <div class="elig-bar-labels">
+                <span>0%</span><span>50%</span><span>100%</span>
+              </div>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('el')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ MUTUAL FUND SECTION ============ -->
+    <section id="mf-section" class="calc-section" aria-label="Mutual Fund Calculators">
+      <div class="section-header">
+        <h2 data-en="Mutual Fund Calculators" data-hi="म्यूचुअल फंड कैलकुलेटर">Mutual Fund Calculators</h2>
+        <p data-en="Plan your wealth creation journey" data-hi="अपनी संपत्ति निर्माण यात्रा की योजना बनाएं">Plan your wealth creation journey</p>
+      </div>
+      <div class="sub-tabs">
+        <button class="sub-tab active" data-sub="sip" data-en="📅 SIP Calculator" data-hi="📅 SIP कैलकुलेटर">📅 SIP Calculator</button>
+        <button class="sub-tab" data-sub="lumpsum" data-en="💰 Lumpsum" data-hi="💰 एकमुश्त">💰 Lumpsum</button>
+      </div>
+
+      <!-- SIP -->
+      <article id="sip" class="calc-card sub-section active">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="SIP Calculator" data-hi="SIP कैलकुलेटर">SIP Calculator</h3>
+            <div class="input-group">
+              <label data-en="Monthly Investment (₹)" data-hi="मासिक निवेश (₹)">Monthly Investment (₹)</label>
+              <input type="number" id="sip-amount" value="10000" min="500" max="1000000" step="500" />
+              <input type="range" id="sip-amount-range" min="500" max="1000000" step="500" value="10000" />
+              <span class="input-display" id="sip-amount-disp">₹10,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Expected Return Rate (% p.a.)" data-hi="अपेक्षित रिटर्न दर (% प्रति वर्ष)">Expected Return Rate (% p.a.)</label>
+              <input type="number" id="sip-rate" value="12" min="1" max="30" step="0.5" />
+              <input type="range" id="sip-rate-range" min="1" max="30" step="0.5" value="12" />
+              <span class="input-display" id="sip-rate-disp">12%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Time Period (Years)" data-hi="समय अवधि (वर्ष)">Time Period (Years)</label>
+              <input type="number" id="sip-tenure" value="10" min="1" max="40" step="1" />
+              <input type="range" id="sip-tenure-range" min="1" max="40" step="1" value="10" />
+              <span class="input-display" id="sip-tenure-disp">10 yrs</span>
+            </div>
+            <button class="calc-btn green" onclick="calcSIP()" data-en="Calculate Returns" data-hi="रिटर्न कैलकुलेट करें">Calculate Returns</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="sip-results">
+              <div class="result-card primary green">
+                <span class="result-label" data-en="Final Value" data-hi="अंतिम मूल्य">Final Value</span>
+                <span class="result-value" id="sip-final">₹23,23,391</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Invested" data-hi="कुल निवेश">Total Invested</span>
+                <span class="result-value" id="sip-invested">₹12,00,000</span>
+              </div>
+              <div class="result-card green-light">
+                <span class="result-label" data-en="Wealth Gained" data-hi="संपत्ति अर्जित">Wealth Gained</span>
+                <span class="result-value" id="sip-gain">₹11,23,391</span>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="sip-chart"></canvas>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('sip')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- LUMPSUM -->
+      <article id="lumpsum" class="calc-card sub-section">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <h3 data-en="Lumpsum Investment Calculator" data-hi="एकमुश्त निवेश कैलकुलेटर">Lumpsum Investment Calculator</h3>
+            <div class="input-group">
+              <label data-en="Investment Amount (₹)" data-hi="निवेश राशि (₹)">Investment Amount (₹)</label>
+              <input type="number" id="ls-amount" value="100000" min="1000" max="10000000" step="5000" />
+              <input type="range" id="ls-amount-range" min="1000" max="10000000" step="5000" value="100000" />
+              <span class="input-display" id="ls-amount-disp">₹1,00,000</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Expected Return Rate (% p.a.)" data-hi="अपेक्षित रिटर्न दर (% प्रति वर्ष)">Expected Return Rate (% p.a.)</label>
+              <input type="number" id="ls-rate" value="12" min="1" max="30" step="0.5" />
+              <input type="range" id="ls-rate-range" min="1" max="30" step="0.5" value="12" />
+              <span class="input-display" id="ls-rate-disp">12%</span>
+            </div>
+            <div class="input-group">
+              <label data-en="Time Period (Years)" data-hi="समय अवधि (वर्ष)">Time Period (Years)</label>
+              <input type="number" id="ls-tenure" value="10" min="1" max="40" step="1" />
+              <input type="range" id="ls-tenure-range" min="1" max="40" step="1" value="10" />
+              <span class="input-display" id="ls-tenure-disp">10 yrs</span>
+            </div>
+            <button class="calc-btn green" onclick="calcLumpsum()" data-en="Calculate Returns" data-hi="रिटर्न कैलकुलेट करें">Calculate Returns</button>
+          </div>
+          <div class="calc-results">
+            <div class="result-cards" id="ls-results">
+              <div class="result-card primary green">
+                <span class="result-label" data-en="Final Value" data-hi="अंतिम मूल्य">Final Value</span>
+                <span class="result-value" id="ls-final">₹3,10,585</span>
+              </div>
+              <div class="result-card">
+                <span class="result-label" data-en="Total Invested" data-hi="कुल निवेश">Total Invested</span>
+                <span class="result-value" id="ls-invested">₹1,00,000</span>
+              </div>
+              <div class="result-card green-light">
+                <span class="result-label" data-en="Wealth Gained" data-hi="संपत्ति अर्जित">Wealth Gained</span>
+                <span class="result-value" id="ls-gain">₹2,10,585</span>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="ls-chart"></canvas>
+            </div>
+            <div class="share-row">
+              <button class="share-btn" onclick="shareResult('ls')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 Copy Result</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ BANK RATES SECTION ============ -->
+    <section id="rates-section" class="calc-section" aria-label="Bank Interest Rates">
+      <div class="section-header">
+        <h2 data-en="Indian Bank Interest Rates" data-hi="भारतीय बैंक ब्याज दरें">Indian Bank Interest Rates</h2>
+        <p data-en="Approximate rates as of 2024-25 — verify with your bank before applying" data-hi="2024-25 की अनुमानित दरें — आवेदन से पहले अपने बैंक से सत्यापित करें">Approximate rates as of 2024-25 — verify with your bank before applying</p>
+      </div>
+      <div class="rates-grid" id="rates-grid">
+        <!-- Populated by JS -->
+      </div>
+      <div class="rates-note">
+        <p data-en="⚠️ Rates are indicative and subject to change. Always verify with the bank directly before taking any loan decision." data-hi="⚠️ दरें सांकेतिक हैं और बदल सकती हैं। किसी भी लोन निर्णय से पहले सीधे बैंक से सत्यापित करें।">⚠️ Rates are indicative and subject to change. Always verify with the bank directly before taking any loan decision.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p data-en="© 2025 Universal Finance Calculator by Amit Godwin Kullu. For educational purposes only." data-hi="© 2025 अमित गॉडविन कुल्लू द्वारा यूनिवर्सल फाइनेंस कैलकुलेटर। केवल शैक्षिक उद्देश्यों के लिए।">
+        © 2025 Universal Finance Calculator by Amit Godwin Kullu. For educational purposes only.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
