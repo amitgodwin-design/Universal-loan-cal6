@@ -12,5 +12,3 @@ A simple web-based loan calculator that helps users calculate EMI, interest, and
 - CSS
 - JavaScript
 
-## Live Demo
-https://amitgodwin-design.github.io/Universal-loan-cal6/
