@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Universal Finance Calculator — EMI, SIP, FD & RD Tools by Amit Godwin Kullu</title>
+  <meta name="description" content="Free, instant EMI calculator, SIP calculator, FD calculator, RD calculator and Loan Eligibility checker for Indian users. Calculate Home Loan, Personal Loan, Car Loan EMI and Mutual Fund returns with live charts." />
+  <meta name="keywords" content="EMI calculator India, SIP calculator, FD calculator, RD calculator, home loan EMI, personal loan calculator, car loan EMI, loan eligibility, mutual fund calculator, fintech tools India" />
+  <meta name="author" content="Amit Godwin Kullu" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Universal Finance Calculator by Amit Godwin Kullu" />
+  <meta property="og:description" content="Free EMI, SIP, FD, RD & Loan Eligibility Calculator — instant results, live charts, dark/light mode, Hindi support." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/080c18/818cf8?text=Universal+Finance+Calculator" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Universal Finance Calculator by Amit Godwin Kullu" />
+  <meta name="twitter:description" content="Free EMI, SIP, FD, RD & Loan Eligibility Calculator for Indian users." />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f4f7ff" id="themeColorMeta" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FinCalc" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How is EMI calculated?","acceptedAnswer":{"@type":"Answer","text":"EMI = [P × R × (1+R)^N] / [(1+R)^N - 1], where P = Principal, R = Monthly Interest Rate, N = Number of months."}},{"@type":"Question","name":"What is a SIP calculator?","acceptedAnswer":{"@type":"Answer","text":"A SIP calculator estimates returns on monthly mutual fund investments over time using compound interest."}},{"@type":"Question","name":"How is FD maturity calculated?","acceptedAnswer":{"@type":"Answer","text":"FD Maturity = P × (1 + r/n)^(n×t), where P = Principal, r = Annual Rate, n = Compounding frequency, t = Time in years."}},{"@type":"Question","name":"How is RD maturity calculated?","acceptedAnswer":{"@type":"Answer","text":"RD uses monthly compounding formula: M = R × [(1+i)^n - 1] / (1 - (1+i)^(-1/3)), where R = Monthly deposit, i = quarterly rate, n = quarters."}},{"@type":"Question","name":"How much home loan am I eligible for?","acceptedAnswer":{"@type":"Answer","text":"Banks typically offer home loans up to 60x net monthly income, subject to a FOIR of around 40–50%."}}]}</script>
+
+<style>
+/* ═══════════════════════════════════════════════════════
+   UNIVERSAL FINANCE CALCULATOR — PREMIUM v3
+   by Amit Godwin Kullu
+   ═══════════════════════════════════════════════════════ */
+
+/* ── DESIGN TOKENS ── */
+:root {
+  --bg:       #080c18;
+  --bg2:      #0d1426;
+  --card:     #101828;
+  --card2:    #141f35;
+  --inp:      #172032;
+  --bdr:      rgba(148,163,255,.10);
+  --bdr-h:    rgba(148,163,255,.32);
+  --acc:      #818cf8;
+  --acc-d:    #6366f1;
+  --cyan:     #22d3ee;
+  --grn:      #34d399;
+  --grn-d:    #10b981;
+  --amb:      #fbbf24;
+  --t1:       #f1f5f9;
+  --t2:       #94a3b8;
+  --t3:       #475569;
+  --sh:       0 4px 24px rgba(0,0,0,.45);
+  --sh-lg:    0 12px 48px rgba(0,0,0,.6);
+  --gl-i:     0 0 28px rgba(99,102,241,.22);
+  --gl-g:     0 0 28px rgba(52,211,153,.18);
+  --r:        18px;
+  --r-sm:     12px;
+  --r-xs:     8px;
+  --ease:     cubic-bezier(.4,0,.2,1);
+  --t:        .22s;
+  --fd:       'Syne', sans-serif;
+  --fb:       'DM Sans', sans-serif;
+  --hh:       68px;
+  --nh:       54px;
+}
+[data-theme="light"] {
+  --bg:    #f4f7ff;
+  --bg2:   #eaefff;
+  --card:  #ffffff;
+  --card2: #f0f4ff;
+  --inp:   #edf1ff;
+  --bdr:   rgba(99,102,241,.13);
+  --bdr-h: rgba(99,102,241,.40);
+  --t1:    #0f172a;
+  --t2:    #475569;
+  --t3:    #94a3b8;
+  --sh:    0 2px 16px rgba(0,0,0,.07);
+  --sh-lg: 0 8px 40px rgba(0,0,0,.12);
+  --gl-i:  0 0 20px rgba(99,102,241,.14);
+  --gl-g:  0 0 20px rgba(16,185,129,.10);
+}
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);line-height:1.6;min-height:100dvh;overflow-x:hidden;transition:background var(--t) var(--ease),color var(--t) var(--ease)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--acc-d);border-radius:4px}
+
+/* ── CONTAINER ── */
+.container{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* ── AMBIENT LAYER ── */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ambient b{position:absolute;border-radius:50%;animation:blobMove linear infinite alternate}
+.ambient b:nth-child(1){width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,.11) 0%,transparent 65%);top:-220px;right:-160px;animation-duration:20s}
+.ambient b:nth-child(2){width:380px;height:380px;background:radial-gradient(circle,rgba(34,211,238,.07) 0%,transparent 65%);bottom:-80px;left:8%;animation-duration:26s}
+.ambient b:nth-child(3){width:260px;height:260px;background:radial-gradient(circle,rgba(52,211,153,.06) 0%,transparent 65%);top:50%;left:55%;animation-duration:32s}
+@keyframes blobMove{to{transform:translate(60px,40px) scale(1.08)}}
+[data-theme="light"] .ambient b:nth-child(1){background:radial-gradient(circle,rgba(99,102,241,.07) 0%,transparent 65%)}
+[data-theme="light"] .ambient b:nth-child(2){background:radial-gradient(circle,rgba(34,211,238,.04) 0%,transparent 65%)}
+[data-theme="light"] .ambient b:nth-child(3){background:radial-gradient(circle,rgba(52,211,153,.03) 0%,transparent 65%)}
+
+/* all content above ambient */
+.site-header,.main-nav,.site-main,.site-footer,.toast{position:relative;z-index:1}
+
+/* ═══════════════ HEADER ═══════════════ */
+.site-header{
+  position:sticky;top:0;z-index:200;height:var(--hh);
+  background:rgba(244,247,255,.92);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--bdr);
+  box-shadow:0 1px 0 rgba(148,163,255,.06),0 2px 20px rgba(0,0,0,.08);
+  transition:background var(--t) var(--ease);
+}
+[data-theme="dark"] .site-header{background:rgba(8,12,24,.85);box-shadow:0 1px 0 rgba(148,163,255,.06),0 2px 20px rgba(0,0,0,.3)}
+.header-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-icon{
+  width:40px;height:40px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--acc-d),var(--cyan));
+  display:grid;place-items:center;font-size:17px;font-weight:800;color:#fff;
+  box-shadow:0 4px 16px rgba(99,102,241,.42);
+  transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease);
+}
+.brand:hover .brand-icon{transform:scale(1.08) rotate(-5deg);box-shadow:0 6px 26px rgba(99,102,241,.65)}
+.brand-name{font-family:var(--fd);font-size:clamp(.88rem,2vw,1.04rem);font-weight:800;color:var(--t1);line-height:1.15;letter-spacing:-.015em}
+.brand-sub{font-size:.67rem;color:var(--t2);letter-spacing:.04em}
+
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.hbtn{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:50px;
+  background:var(--card);border:1px solid var(--bdr);color:var(--t1);
+  font-family:var(--fb);font-size:.78rem;font-weight:500;
+  cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;
+  transition:all var(--t) var(--ease);
+}
+.hbtn:hover{border-color:var(--bdr-h);background:var(--card2);transform:translateY(-1px)}
+.hbtn:active{transform:translateY(0)}
+.hbtn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* ═══════════════ NAV ═══════════════ */
+.main-nav{
+  position:sticky;top:var(--hh);z-index:199;height:var(--nh);
+  background:var(--bg2);border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;transition:background var(--t) var(--ease);
+}
+.nav-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:5px 0}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  padding:8px 20px;border-radius:50px;border:1px solid transparent;
+  background:transparent;color:var(--t2);font-family:var(--fd);font-weight:600;font-size:.83rem;
+  cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;
+  transition:all var(--t) var(--ease);
+}
+.nav-tab:hover{color:var(--t1);background:var(--card);border-color:var(--bdr)}
+.nav-tab.active{background:linear-gradient(135deg,var(--acc-d),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 4px 18px rgba(99,102,241,.4)}
+.nav-tab:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* ═══════════════ MAIN ═══════════════ */
+.site-main{padding:32px 20px 72px}
+
+.calc-section{display:none}
+.calc-section.active{display:block;animation:fadeUp .34s var(--ease) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.section-header{text-align:center;margin-bottom:28px}
+.section-header h2{
+  font-family:var(--fd);font-weight:800;font-size:clamp(1.4rem,4vw,2rem);letter-spacing:-.025em;
+  background:linear-gradient(135deg,var(--t1) 30%,var(--acc));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.section-header p{color:var(--t2);font-size:.9rem}
+
+/* sub tabs */
+.sub-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.sub-tab{
+  padding:8px 18px;border-radius:50px;border:1px solid var(--bdr);background:var(--card);
+  color:var(--t2);font-family:var(--fb);font-weight:500;font-size:.82rem;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--t) var(--ease);
+}
+.sub-tab:hover{border-color:var(--bdr-h);color:var(--t1);transform:translateY(-1px)}
+.sub-tab.active{background:linear-gradient(135deg,var(--acc-d),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(99,102,241,.38);font-weight:600}
+.sub-tab:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.sub-section{display:none}
+.sub-section.active{display:block;animation:fadeUp .28s var(--ease) both}
+
+/* ═══════════════ CALC CARD ═══════════════ */
+.calc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px;box-shadow:var(--sh);transition:background var(--t) var(--ease),border-color var(--t) var(--ease)}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+@media(max-width:768px){.calc-grid{grid-template-columns:1fr;gap:28px}}
+
+/* ─── INPUTS ─── */
+.calc-inputs h3,.calc-results h3{
+  font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--t1);
+  margin-bottom:22px;letter-spacing:-.015em;
+  display:flex;align-items:center;gap:9px;
+}
+.h3-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:8px;font-size:14px;flex-shrink:0;
+}
+.h3-pill.blue{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.22)}
+.h3-pill.green{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.20)}
+.h3-pill.amber{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.22)}
+
+.input-group{margin-bottom:20px}
+.input-group label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.72rem;font-weight:600;color:var(--t2);
+  margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;
+}
+.input-group label .lv{
+  font-family:var(--fd);font-size:.8rem;font-weight:700;color:var(--acc);
+  background:rgba(99,102,241,.1);padding:2px 9px;border-radius:6px;
+  letter-spacing:normal;text-transform:none;
+  transition:background var(--t) var(--ease);
+}
+
+.input-group input[type="number"]{
+  width:100%;background:var(--inp);border:1.5px solid var(--bdr);border-radius:var(--r-sm);
+  padding:12px 14px;color:var(--t1);font-family:var(--fb);font-size:1rem;font-weight:500;
+  outline:none;margin-bottom:10px;-moz-appearance:textfield;
+  transition:border-color var(--t) var(--ease),box-shadow var(--t) var(--ease),background var(--t) var(--ease);
+}
+.input-group input[type="number"]:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(99,102,241,.14);background:var(--card2)}
+.input-group input[type="number"]::-webkit-inner-spin-button,
+.input-group input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none}
+
+.input-group input[type="range"]{
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:5px;border-radius:99px;outline:none;cursor:pointer;background:var(--inp);margin-bottom:4px;
+}
+.input-group input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid var(--acc-d);
+  box-shadow:0 2px 10px rgba(99,102,241,.5);cursor:pointer;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease);
+}
+.input-group input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.28);box-shadow:0 4px 18px rgba(99,102,241,.7)}
+.input-group input[type="range"]::-moz-range-thumb{width:22px;height:22px;border:3px solid var(--acc-d);border-radius:50%;background:#fff;cursor:pointer}
+
+/* select for FD compounding */
+.input-group select{
+  width:100%;background:var(--inp);border:1.5px solid var(--bdr);border-radius:var(--r-sm);
+  padding:12px 14px;color:var(--t1);font-family:var(--fb);font-size:1rem;font-weight:500;
+  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;
+  transition:border-color var(--t) var(--ease),box-shadow var(--t) var(--ease),background-color var(--t) var(--ease);
+}
+.input-group select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(99,102,241,.14)}
+.input-group select option{background:var(--card);color:var(--t1)}
+
+.rate-hint{background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15);border-left:3px solid var(--cyan);border-radius:var(--r-xs);padding:9px 12px;margin-bottom:18px;font-size:.75rem;color:var(--cyan);line-height:1.5}
+.rate-hint.amber{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.20);border-left-color:var(--amb);color:var(--amb)}
+
+/* ─── BUTTON ─── */
+.calc-btn{
+  width:100%;padding:14px 20px;
+  background:linear-gradient(135deg,var(--acc-d),var(--cyan));
+  border:none;border-radius:var(--r-sm);color:#fff;
+  font-family:var(--fd);font-size:.9rem;font-weight:700;
+  cursor:pointer;letter-spacing:.05em;
+  box-shadow:0 6px 22px rgba(99,102,241,.42);
+  position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;
+  transition:all var(--t) var(--ease);
+}
+.calc-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,transparent 55%);pointer-events:none}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(99,102,241,.58)}
+.calc-btn:active{transform:scale(.98)}
+.calc-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.calc-btn.green{background:linear-gradient(135deg,var(--grn-d),var(--grn));box-shadow:0 6px 22px rgba(16,185,129,.38)}
+.calc-btn.green:hover{box-shadow:0 10px 32px rgba(16,185,129,.55)}
+.calc-btn.amber{background:linear-gradient(135deg,#d97706,var(--amb));box-shadow:0 6px 22px rgba(217,119,6,.38)}
+.calc-btn.amber:hover{box-shadow:0 10px 32px rgba(217,119,6,.55)}
+
+/* ─── RESULTS ─── */
+.result-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.result-card{
+  background:var(--card2);border:1px solid var(--bdr);border-radius:var(--r-sm);
+  padding:14px 18px;display:flex;justify-content:space-between;align-items:center;
+  transition:all var(--t) var(--ease);
+}
+.result-card:hover{border-color:var(--bdr-h);transform:translateX(3px)}
+.result-card.primary{background:linear-gradient(135deg,rgba(99,102,241,.16),rgba(34,211,238,.08));border-color:rgba(99,102,241,.28);box-shadow:var(--gl-i)}
+.result-card.primary.green{background:linear-gradient(135deg,rgba(52,211,153,.16),rgba(16,185,129,.08));border-color:rgba(52,211,153,.28);box-shadow:var(--gl-g)}
+.result-card.primary.amber{background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(217,119,6,.08));border-color:rgba(251,191,36,.28);box-shadow:0 0 20px rgba(251,191,36,.12)}
+.result-card.green-light{background:rgba(52,211,153,.06);border-color:rgba(52,211,153,.14)}
+.result-card.amber-light{background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.14)}
+
+.result-label{font-size:.72rem;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.result-value{font-family:var(--fd);font-size:1.05rem;font-weight:700;color:var(--t1);transition:color var(--t) var(--ease)}
+.result-card.primary .result-value{color:var(--acc);font-size:1.22rem}
+.result-card.primary.green .result-value{color:var(--grn);font-size:1.22rem}
+.result-card.primary.amber .result-value{color:var(--amb);font-size:1.22rem}
+.result-card.green-light .result-value{color:var(--grn)}
+.result-card.amber-light .result-value{color:var(--amb)}
+
+@keyframes valPop{0%{transform:scale(1.06);opacity:.5}100%{transform:scale(1);opacity:1}}
+.result-value.pop{animation:valPop .3s var(--ease)}
+
+@keyframes cardPulse{0%{box-shadow:0 0 0 0 rgba(99,102,241,.5)}70%{box-shadow:0 0 0 10px rgba(99,102,241,0)}100%{box-shadow:0 0 0 0 rgba(99,102,241,0)}}
+.result-card.primary.pulsing{animation:cardPulse .65s var(--ease)}
+@keyframes cardPulseAmber{0%{box-shadow:0 0 0 0 rgba(251,191,36,.5)}70%{box-shadow:0 0 0 10px rgba(251,191,36,0)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
+.result-card.primary.amber.pulsing{animation:cardPulseAmber .65s var(--ease)}
+
+/* chart */
+.chart-wrap{position:relative;height:200px;margin:0 auto 18px;max-width:240px}
+
+/* share */
+.share-row{display:flex;justify-content:center}
+.share-btn{
+  padding:8px 22px;border-radius:50px;background:transparent;border:1.5px solid var(--bdr);
+  color:var(--t2);font-family:var(--fb);font-size:.78rem;font-weight:500;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--t) var(--ease);
+}
+.share-btn:hover{border-color:var(--acc);color:var(--acc);background:rgba(99,102,241,.07);transform:translateY(-1px)}
+.share-btn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* eligibility bar */
+.eligibility-bar-wrap{margin:18px 0 14px}
+.elig-label{font-size:.73rem;color:var(--t2);font-weight:500;margin-bottom:8px}
+.elig-bar{height:10px;background:var(--inp);border-radius:99px;overflow:hidden;border:1px solid var(--bdr)}
+.elig-bar-fill{height:100%;background:linear-gradient(90deg,var(--grn-d),var(--grn));border-radius:99px;transition:width .7s cubic-bezier(.34,1.56,.64,1)}
+.elig-bar-labels{display:flex;justify-content:space-between;font-size:.67rem;color:var(--t3);margin-top:5px}
+
+/* ═══════════════ BANK RATES ═══════════════ */
+/* Rate section sub-tabs */
+.rates-sub-tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.rates-sub-tab{
+  padding:8px 18px;border-radius:50px;border:1px solid var(--bdr);background:var(--card);
+  color:var(--t2);font-family:var(--fb);font-weight:500;font-size:.82rem;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--t) var(--ease);
+}
+.rates-sub-tab:hover{border-color:var(--bdr-h);color:var(--t1);transform:translateY(-1px)}
+.rates-sub-tab.active{background:linear-gradient(135deg,var(--acc-d),var(--cyan));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(99,102,241,.38);font-weight:600}
+
+.rates-panel{display:none}
+.rates-panel.active{display:block;animation:fadeUp .28s var(--ease) both}
+
+.rates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-bottom:20px}
+.bank-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:22px;transition:all var(--t) var(--ease);animation:fadeUp .35s var(--ease) both}
+.bank-card:hover{border-color:var(--bdr-h);transform:translateY(-4px);box-shadow:var(--sh)}
+.bank-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.bank-logo{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.bank-name{font-family:var(--fd);font-size:.98rem;font-weight:700}
+.bank-rates-list{display:flex;flex-direction:column}
+.bank-rate-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:.83rem}
+.bank-rate-row:last-child{border-bottom:none}
+.rate-type{color:var(--t2)}
+.rate-val{font-family:var(--fd);font-weight:700;color:var(--acc);font-size:.85rem}
+.rate-val.amber{color:var(--amb)}
+.rates-note{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.22);border-left:3px solid var(--amb);border-radius:var(--r-xs);padding:12px 16px;font-size:.77rem;color:var(--amb);line-height:1.5}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.site-footer{background:var(--bg2);border-top:1px solid var(--bdr);padding:22px 20px;text-align:center;font-size:.75rem;color:var(--t3);transition:background var(--t) var(--ease)}
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast{position:fixed;bottom:28px;left:50%;z-index:999;transform:translateX(-50%) translateY(90px);background:var(--card);border:1px solid var(--acc-d);border-radius:50px;padding:11px 26px;font-family:var(--fb);font-size:.83rem;font-weight:600;color:var(--t1);box-shadow:0 8px 32px rgba(0,0,0,.5),var(--gl-i);transition:transform .38s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:600px){
+  .brand-sub{display:none}
+  .hbtn .hbtn-lbl{display:none}
+  .calc-card{padding:20px 16px}
+  .nav-tab{padding:7px 13px;font-size:.79rem}
+  .sub-tab{padding:7px 12px;font-size:.77rem}
+  .rates-sub-tab{padding:7px 12px;font-size:.77rem}
+  .rates-grid{grid-template-columns:1fr}
+  .section-header h2{font-size:1.3rem}
+}
+@media(max-width:380px){
+  .brand-icon{width:36px;height:36px;font-size:15px}
+  .container{padding:0 13px}
+}
+/* coarse pointer = touch — bigger targets */
+@media(pointer:coarse){
+  .nav-tab,.sub-tab,.hbtn,.share-btn,.calc-btn,.rates-sub-tab{min-height:44px}
+  .input-group input[type="range"]{height:8px}
+  .input-group input[type="range"]::-webkit-slider-thumb{width:28px;height:28px}
+}
+</style>
+</head>
+
+<body data-lang="hi">
+
+<!-- ambient blobs -->
+<div class="ambient" aria-hidden="true"><b></b><b></b><b></b></div>
+
+<!-- ═══════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════ -->
+<header class="site-header" role="banner">
+  <div class="header-inner container">
+    <a href="#" class="brand" aria-label="Universal Finance Calculator">
+      <span class="brand-icon" aria-hidden="true">₹</span>
+      <div>
+        <div class="brand-name" data-en="Universal Finance Calculator" data-hi="यूनिवर्सल फाइनेंस कैलकुलेटर">यूनिवर्सल फाइनेंस कैलकुलेटर</div>
+        <div class="brand-sub"  data-en="by Amit Godwin Kullu"        data-hi="अमित गॉडविन कुल्लू द्वारा">अमित गॉडविन कुल्लू द्वारा</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <button class="hbtn" id="langToggle" aria-label="Toggle language">
+        <span class="lang-flag" aria-hidden="true">🇮🇳</span>
+        <span class="hbtn-lbl" id="langLabel">हिं</span>
+      </button>
+      <button class="hbtn" id="themeToggle" aria-label="Toggle dark/light theme">
+        <span class="theme-icon" aria-hidden="true">☀️</span>
+        <span class="hbtn-lbl" id="themeLabel">Light</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════
+     NAV
+     ═══════════════════════════════════════ -->
+<nav class="main-nav" role="navigation" aria-label="Calculator categories">
+  <div class="container">
+    <div class="nav-tabs" role="tablist">
+      <button class="nav-tab active" role="tab" aria-selected="true"  data-tab="loans"   data-en="🏦 Loan Calculators" data-hi="🏦 लोन कैलकुलेटर">🏦 लोन कैलकुलेटर</button>
+      <button class="nav-tab"        role="tab" aria-selected="false" data-tab="mf"      data-en="📈 Mutual Fund"      data-hi="📈 म्यूचुअल फंड">📈 म्यूचुअल फंड</button>
+      <button class="nav-tab"        role="tab" aria-selected="false" data-tab="deposit" data-en="🏦 FD / RD"           data-hi="🏦 FD / RD">🏦 FD / RD</button>
+      <button class="nav-tab"        role="tab" aria-selected="false" data-tab="rates"   data-en="🏛️ Bank Rates"       data-hi="🏛️ बैंक दरें">🏛️ बैंक दरें</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     MAIN
+     ═══════════════════════════════════════ -->
+<main class="site-main container" role="main">
+
+  <!-- ── LOANS SECTION ── -->
+  <section id="loans-section" class="calc-section active" aria-label="Loan Calculators">
+    <div class="section-header">
+      <h2 data-en="Loan Calculators" data-hi="लोन कैलकुलेटर">लोन कैलकुलेटर</h2>
+      <p data-en="Drag any slider for instant live EMI updates" data-hi="लाइव EMI अपडेट के लिए कोई भी स्लाइडर खींचें">लाइव EMI अपडेट के लिए कोई भी स्लाइडर खींचें</p>
+    </div>
+    <div class="sub-tabs" role="tablist">
+      <button class="sub-tab active" role="tab" aria-selected="true"  data-sub="home-loan"    data-en="🏠 Home Loan"   data-hi="🏠 होम लोन">🏠 होम लोन</button>
+      <button class="sub-tab"        role="tab" aria-selected="false" data-sub="personal-loan" data-en="👤 Personal"    data-hi="👤 पर्सनल">👤 पर्सनल</button>
+      <button class="sub-tab"        role="tab" aria-selected="false" data-sub="car-loan"      data-en="🚗 Car Loan"    data-hi="🚗 कार लोन">🚗 कार लोन</button>
+      <button class="sub-tab"        role="tab" aria-selected="false" data-sub="eligibility"   data-en="✅ Eligibility" data-hi="✅ पात्रता">✅ पात्रता</button>
+    </div>
+
+    <!-- HOME LOAN -->
+    <article id="home-loan" class="calc-card sub-section active">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">🏠</span><span data-en="Home Loan EMI Calculator" data-hi="होम लोन EMI कैलकुलेटर">होम लोन EMI कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="hl-amount"><span data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">लोन राशि (₹)</span><span class="lv" id="hl-amount-disp">₹50,00,000</span></label>
+            <input type="number" id="hl-amount" value="5000000" min="100000" max="100000000" step="50000" />
+            <input type="range"  id="hl-amount-range" min="100000" max="100000000" step="50000" value="5000000" />
+          </div>
+          <div class="input-group">
+            <label for="hl-rate"><span data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">ब्याज दर (% प्रति वर्ष)</span><span class="lv" id="hl-rate-disp">8.5%</span></label>
+            <input type="number" id="hl-rate" value="8.5" min="5" max="20" step="0.1" />
+            <input type="range"  id="hl-rate-range" min="5" max="20" step="0.1" value="8.5" />
+          </div>
+          <div class="input-group">
+            <label for="hl-tenure"><span data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">अवधि (वर्ष)</span><span class="lv" id="hl-tenure-disp">20 yrs</span></label>
+            <input type="number" id="hl-tenure" value="20" min="1" max="30" step="1" />
+            <input type="range"  id="hl-tenure-range" min="1" max="30" step="1" value="20" />
+          </div>
+          <div class="rate-hint"><span data-en="💡 SBI Home Loan from 8.50% p.a. | HDFC from 8.70% p.a." data-hi="💡 SBI होम लोन 8.50% से | HDFC 8.70% से">💡 SBI होम लोन 8.50% से | HDFC 8.70% से</span></div>
+          <button class="calc-btn" onclick="calcLoan('hl')" data-en="Recalculate EMI" data-hi="EMI दोबारा कैलकुलेट करें">EMI दोबारा कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">📊</span><span data-en="Results" data-hi="परिणाम">परिणाम</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary"><span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">मासिक EMI</span><span class="result-value" id="hl-emi">₹43,391</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">कुल ब्याज</span><span class="result-value" id="hl-interest">₹54,13,840</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">कुल भुगतान</span><span class="result-value" id="hl-total">₹1,04,13,840</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="hl-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('hl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PERSONAL LOAN -->
+    <article id="personal-loan" class="calc-card sub-section">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">👤</span><span data-en="Personal Loan EMI Calculator" data-hi="पर्सनल लोन EMI कैलकुलेटर">पर्सनल लोन EMI कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="pl-amount"><span data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">लोन राशि (₹)</span><span class="lv" id="pl-amount-disp">₹5,00,000</span></label>
+            <input type="number" id="pl-amount" value="500000" min="10000" max="5000000" step="10000" />
+            <input type="range"  id="pl-amount-range" min="10000" max="5000000" step="10000" value="500000" />
+          </div>
+          <div class="input-group">
+            <label for="pl-rate"><span data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर">ब्याज दर</span><span class="lv" id="pl-rate-disp">12%</span></label>
+            <input type="number" id="pl-rate" value="12" min="8" max="30" step="0.5" />
+            <input type="range"  id="pl-rate-range" min="8" max="30" step="0.5" value="12" />
+          </div>
+          <div class="input-group">
+            <label for="pl-tenure"><span data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">अवधि (वर्ष)</span><span class="lv" id="pl-tenure-disp">3 yrs</span></label>
+            <input type="number" id="pl-tenure" value="3" min="1" max="7" step="1" />
+            <input type="range"  id="pl-tenure-range" min="1" max="7" step="1" value="3" />
+          </div>
+          <div class="rate-hint"><span data-en="💡 HDFC Personal Loan from 10.50% | ICICI from 10.65%" data-hi="💡 HDFC पर्सनल लोन 10.50% से | ICICI 10.65% से">💡 HDFC पर्सनल लोन 10.50% से | ICICI 10.65% से</span></div>
+          <button class="calc-btn" onclick="calcLoan('pl')" data-en="Recalculate EMI" data-hi="EMI दोबारा कैलकुलेट करें">EMI दोबारा कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">📊</span><span data-en="Results" data-hi="परिणाम">परिणाम</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary"><span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">मासिक EMI</span><span class="result-value" id="pl-emi">₹16,607</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">कुल ब्याज</span><span class="result-value" id="pl-interest">₹97,852</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">कुल भुगतान</span><span class="result-value" id="pl-total">₹5,97,852</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="pl-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('pl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- CAR LOAN -->
+    <article id="car-loan" class="calc-card sub-section">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">🚗</span><span data-en="Car Loan EMI Calculator" data-hi="कार लोन EMI कैलकुलेटर">कार लोन EMI कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="cl-amount"><span data-en="Loan Amount (₹)" data-hi="लोन राशि (₹)">लोन राशि (₹)</span><span class="lv" id="cl-amount-disp">₹8,00,000</span></label>
+            <input type="number" id="cl-amount" value="800000" min="50000" max="10000000" step="50000" />
+            <input type="range"  id="cl-amount-range" min="50000" max="10000000" step="50000" value="800000" />
+          </div>
+          <div class="input-group">
+            <label for="cl-rate"><span data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर">ब्याज दर</span><span class="lv" id="cl-rate-disp">9%</span></label>
+            <input type="number" id="cl-rate" value="9" min="7" max="18" step="0.5" />
+            <input type="range"  id="cl-rate-range" min="7" max="18" step="0.5" value="9" />
+          </div>
+          <div class="input-group">
+            <label for="cl-tenure"><span data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">अवधि (वर्ष)</span><span class="lv" id="cl-tenure-disp">5 yrs</span></label>
+            <input type="number" id="cl-tenure" value="5" min="1" max="7" step="1" />
+            <input type="range"  id="cl-tenure-range" min="1" max="7" step="1" value="5" />
+          </div>
+          <div class="rate-hint"><span data-en="💡 SBI Car Loan from 8.75% | HDFC from 8.80%" data-hi="💡 SBI कार लोन 8.75% से | HDFC 8.80% से">💡 SBI कार लोन 8.75% से | HDFC 8.80% से</span></div>
+          <button class="calc-btn" onclick="calcLoan('cl')" data-en="Recalculate EMI" data-hi="EMI दोबारा कैलकुलेट करें">EMI दोबारा कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">📊</span><span data-en="Results" data-hi="परिणाम">परिणाम</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary"><span class="result-label" data-en="Monthly EMI" data-hi="मासिक EMI">मासिक EMI</span><span class="result-value" id="cl-emi">₹16,601</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Interest" data-hi="कुल ब्याज">कुल ब्याज</span><span class="result-value" id="cl-interest">₹1,96,060</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Payment" data-hi="कुल भुगतान">कुल भुगतान</span><span class="result-value" id="cl-total">₹9,96,060</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="cl-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('cl')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ELIGIBILITY -->
+    <article id="eligibility" class="calc-card sub-section">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">✅</span><span data-en="Loan Eligibility Calculator" data-hi="लोन पात्रता कैलकुलेटर">लोन पात्रता कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="el-income"><span data-en="Monthly Income (₹)" data-hi="मासिक आय (₹)">मासिक आय (₹)</span><span class="lv" id="el-income-disp">₹80,000</span></label>
+            <input type="number" id="el-income" value="80000" min="10000" max="1000000" step="5000" />
+            <input type="range"  id="el-income-range" min="10000" max="1000000" step="5000" value="80000" />
+          </div>
+          <div class="input-group">
+            <label for="el-emi"><span data-en="Existing EMIs (₹)" data-hi="मौजूदा EMI (₹)">मौजूदा EMI (₹)</span><span class="lv" id="el-emi-disp">₹0</span></label>
+            <input type="number" id="el-emi" value="0" min="0" max="200000" step="1000" />
+            <input type="range"  id="el-emi-range" min="0" max="200000" step="1000" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="el-rate"><span data-en="Expected Interest Rate (%)" data-hi="अपेक्षित ब्याज दर (%)">अपेक्षित ब्याज दर (%)</span><span class="lv" id="el-rate-disp">8.5%</span></label>
+            <input type="number" id="el-rate" value="8.5" min="5" max="20" step="0.5" />
+            <input type="range"  id="el-rate-range" min="5" max="20" step="0.5" value="8.5" />
+          </div>
+          <div class="input-group">
+            <label for="el-tenure"><span data-en="Desired Tenure (Years)" data-hi="वांछित अवधि (वर्ष)">वांछित अवधि (वर्ष)</span><span class="lv" id="el-tenure-disp">20 yrs</span></label>
+            <input type="number" id="el-tenure" value="20" min="1" max="30" step="1" />
+            <input type="range"  id="el-tenure-range" min="1" max="30" step="1" value="20" />
+          </div>
+          <button class="calc-btn" onclick="calcEligibility()" data-en="Check Eligibility" data-hi="पात्रता जांचें">पात्रता जांचें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">📊</span><span data-en="Results" data-hi="परिणाम">परिणाम</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary"><span class="result-label" data-en="Eligible Loan Amount" data-hi="पात्र लोन राशि">पात्र लोन राशि</span><span class="result-value" id="el-eligible">₹46,52,840</span></div>
+            <div class="result-card"><span class="result-label" data-en="Max Eligible EMI" data-hi="अधिकतम पात्र EMI">अधिकतम पात्र EMI</span><span class="result-value" id="el-max-emi">₹32,000</span></div>
+            <div class="result-card"><span class="result-label" data-en="FOIR Used" data-hi="FOIR उपयोग">FOIR उपयोग</span><span class="result-value" id="el-foir">40%</span></div>
+          </div>
+          <div class="eligibility-bar-wrap">
+            <div class="elig-label" data-en="Income utilization for loan repayment" data-hi="लोन चुकाने के लिए आय का उपयोग">लोन चुकाने के लिए आय का उपयोग</div>
+            <div class="elig-bar"><div class="elig-bar-fill" id="el-bar" style="width:40%"></div></div>
+            <div class="elig-bar-labels"><span>0%</span><span>50%</span><span>100%</span></div>
+          </div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('el')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ── MF SECTION ── -->
+  <section id="mf-section" class="calc-section" aria-label="Mutual Fund Calculators">
+    <div class="section-header">
+      <h2 data-en="Mutual Fund Calculators" data-hi="म्यूचुअल फंड कैलकुलेटर">म्यूचुअल फंड कैलकुलेटर</h2>
+      <p data-en="Live wealth projections as you adjust your plan" data-hi="अपनी संपत्ति निर्माण यात्रा की योजना बनाएं">अपनी संपत्ति निर्माण यात्रा की योजना बनाएं</p>
+    </div>
+    <div class="sub-tabs" role="tablist">
+      <button class="sub-tab active" role="tab" aria-selected="true"  data-sub="sip"     data-en="📅 SIP Calculator" data-hi="📅 SIP कैलकुलेटर">📅 SIP कैलकुलेटर</button>
+      <button class="sub-tab"        role="tab" aria-selected="false" data-sub="lumpsum" data-en="💰 Lumpsum"         data-hi="💰 एकमुश्त">💰 एकमुश्त</button>
+    </div>
+
+    <!-- SIP -->
+    <article id="sip" class="calc-card sub-section active">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">📅</span><span data-en="SIP Calculator" data-hi="SIP कैलकुलेटर">SIP कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="sip-amount"><span data-en="Monthly Investment (₹)" data-hi="मासिक निवेश (₹)">मासिक निवेश (₹)</span><span class="lv" id="sip-amount-disp">₹10,000</span></label>
+            <input type="number" id="sip-amount" value="10000" min="500" max="1000000" step="500" />
+            <input type="range"  id="sip-amount-range" min="500" max="1000000" step="500" value="10000" />
+          </div>
+          <div class="input-group">
+            <label for="sip-rate"><span data-en="Expected Return (% p.a.)" data-hi="अपेक्षित रिटर्न दर">अपेक्षित रिटर्न दर</span><span class="lv" id="sip-rate-disp">12%</span></label>
+            <input type="number" id="sip-rate" value="12" min="1" max="30" step="0.5" />
+            <input type="range"  id="sip-rate-range" min="1" max="30" step="0.5" value="12" />
+          </div>
+          <div class="input-group">
+            <label for="sip-tenure"><span data-en="Time Period (Years)" data-hi="समय अवधि (वर्ष)">समय अवधि (वर्ष)</span><span class="lv" id="sip-tenure-disp">10 yrs</span></label>
+            <input type="number" id="sip-tenure" value="10" min="1" max="40" step="1" />
+            <input type="range"  id="sip-tenure-range" min="1" max="40" step="1" value="10" />
+          </div>
+          <button class="calc-btn green" onclick="calcSIP()" data-en="Calculate Returns" data-hi="रिटर्न कैलकुलेट करें">रिटर्न कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">💹</span><span data-en="Wealth Projection" data-hi="संपत्ति प्रक्षेपण">संपत्ति प्रक्षेपण</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary green"><span class="result-label" data-en="Final Value" data-hi="अंतिम मूल्य">अंतिम मूल्य</span><span class="result-value" id="sip-final">₹23,23,391</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Invested" data-hi="कुल निवेश">कुल निवेश</span><span class="result-value" id="sip-invested">₹12,00,000</span></div>
+            <div class="result-card green-light"><span class="result-label" data-en="Wealth Gained" data-hi="संपत्ति अर्जित">संपत्ति अर्जित</span><span class="result-value" id="sip-gain">₹11,23,391</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="sip-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('sip')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- LUMPSUM -->
+    <article id="lumpsum" class="calc-card sub-section">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill blue" aria-hidden="true">💰</span><span data-en="Lumpsum Investment Calculator" data-hi="एकमुश्त निवेश कैलकुलेटर">एकमुश्त निवेश कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="ls-amount"><span data-en="Investment Amount (₹)" data-hi="निवेश राशि (₹)">निवेश राशि (₹)</span><span class="lv" id="ls-amount-disp">₹1,00,000</span></label>
+            <input type="number" id="ls-amount" value="100000" min="1000" max="10000000" step="5000" />
+            <input type="range"  id="ls-amount-range" min="1000" max="10000000" step="5000" value="100000" />
+          </div>
+          <div class="input-group">
+            <label for="ls-rate"><span data-en="Expected Return (% p.a.)" data-hi="अपेक्षित रिटर्न दर">अपेक्षित रिटर्न दर</span><span class="lv" id="ls-rate-disp">12%</span></label>
+            <input type="number" id="ls-rate" value="12" min="1" max="30" step="0.5" />
+            <input type="range"  id="ls-rate-range" min="1" max="30" step="0.5" value="12" />
+          </div>
+          <div class="input-group">
+            <label for="ls-tenure"><span data-en="Time Period (Years)" data-hi="समय अवधि (वर्ष)">समय अवधि (वर्ष)</span><span class="lv" id="ls-tenure-disp">10 yrs</span></label>
+            <input type="number" id="ls-tenure" value="10" min="1" max="40" step="1" />
+            <input type="range"  id="ls-tenure-range" min="1" max="40" step="1" value="10" />
+          </div>
+          <button class="calc-btn green" onclick="calcLumpsum()" data-en="Calculate Returns" data-hi="रिटर्न कैलकुलेट करें">रिटर्न कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill green" aria-hidden="true">💹</span><span data-en="Wealth Projection" data-hi="संपत्ति प्रक्षेपण">संपत्ति प्रक्षेपण</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary green"><span class="result-label" data-en="Final Value" data-hi="अंतिम मूल्य">अंतिम मूल्य</span><span class="result-value" id="ls-final">₹3,10,585</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Invested" data-hi="कुल निवेश">कुल निवेश</span><span class="result-value" id="ls-invested">₹1,00,000</span></div>
+            <div class="result-card green-light"><span class="result-label" data-en="Wealth Gained" data-hi="संपत्ति अर्जित">संपत्ति अर्जित</span><span class="result-value" id="ls-gain">₹2,10,585</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="ls-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('ls')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ── FD / RD SECTION ── -->
+  <section id="deposit-section" class="calc-section" aria-label="FD RD Calculators">
+    <div class="section-header">
+      <h2 data-en="FD / RD Calculators" data-hi="FD / RD कैलकुलेटर">FD / RD कैलकुलेटर</h2>
+      <p data-en="Calculate Fixed Deposit and Recurring Deposit maturity with live charts" data-hi="लाइव चार्ट के साथ FD और RD मैच्योरिटी कैलकुलेट करें">लाइव चार्ट के साथ FD और RD मैच्योरिटी कैलकुलेट करें</p>
+    </div>
+    <div class="sub-tabs" role="tablist">
+      <button class="sub-tab active" role="tab" aria-selected="true"  data-sub="fd-calc" data-en="🔒 Fixed Deposit"    data-hi="🔒 फिक्स्ड डिपॉज़िट">🔒 फिक्स्ड डिपॉज़िट</button>
+      <button class="sub-tab"        role="tab" aria-selected="false" data-sub="rd-calc" data-en="📆 Recurring Deposit" data-hi="📆 रिकरिंग डिपॉज़िट">📆 रिकरिंग डिपॉज़िट</button>
+    </div>
+
+    <!-- FIXED DEPOSIT -->
+    <article id="fd-calc" class="calc-card sub-section active">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill amber" aria-hidden="true">🔒</span><span data-en="Fixed Deposit Calculator" data-hi="फिक्स्ड डिपॉज़िट कैलकुलेटर">फिक्स्ड डिपॉज़िट कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="fd-amount"><span data-en="Principal Amount (₹)" data-hi="मूल राशि (₹)">मूल राशि (₹)</span><span class="lv" id="fd-amount-disp">₹1,00,000</span></label>
+            <input type="number" id="fd-amount" value="100000" min="1000" max="100000000" step="1000" />
+            <input type="range"  id="fd-amount-range" min="1000" max="100000000" step="1000" value="100000" />
+          </div>
+          <div class="input-group">
+            <label for="fd-rate"><span data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">ब्याज दर (% प्रति वर्ष)</span><span class="lv" id="fd-rate-disp">7%</span></label>
+            <input type="number" id="fd-rate" value="7" min="1" max="15" step="0.1" />
+            <input type="range"  id="fd-rate-range" min="1" max="15" step="0.1" value="7" />
+          </div>
+          <div class="input-group">
+            <label for="fd-tenure"><span data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">अवधि (वर्ष)</span><span class="lv" id="fd-tenure-disp">3 yrs</span></label>
+            <input type="number" id="fd-tenure" value="3" min="1" max="10" step="1" />
+            <input type="range"  id="fd-tenure-range" min="1" max="10" step="1" value="3" />
+          </div>
+          <div class="input-group">
+            <label for="fd-compound"><span data-en="Compounding Frequency" data-hi="चक्रवृद्धि आवृत्ति">चक्रवृद्धि आवृत्ति</span></label>
+            <select id="fd-compound">
+              <option value="1"  data-en="Annually"   data-hi="वार्षिक">वार्षिक</option>
+              <option value="2"  data-en="Half-Yearly" data-hi="अर्धवार्षिक">अर्धवार्षिक</option>
+              <option value="4"  value="4" selected data-en="Quarterly" data-hi="त्रैमासिक">त्रैमासिक</option>
+              <option value="12" data-en="Monthly"    data-hi="मासिक">मासिक</option>
+            </select>
+          </div>
+          <div class="rate-hint amber"><span data-en="💡 SBI FD rates: 6.50%–7.10% | HDFC: 7.00%–7.25% | Post Office: 7.50%" data-hi="💡 SBI FD दरें: 6.50%–7.10% | HDFC: 7.00%–7.25% | पोस्ट ऑफिस: 7.50%">💡 SBI FD दरें: 6.50%–7.10% | HDFC: 7.00%–7.25% | पोस्ट ऑफिस: 7.50%</span></div>
+          <button class="calc-btn amber" onclick="calcFD()" data-en="Calculate FD Maturity" data-hi="FD मैच्योरिटी कैलकुलेट करें">FD मैच्योरिटी कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill amber" aria-hidden="true">📊</span><span data-en="FD Maturity Details" data-hi="FD मैच्योरिटी विवरण">FD मैच्योरिटी विवरण</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary amber"><span class="result-label" data-en="Maturity Amount" data-hi="मैच्योरिटी राशि">मैच्योरिटी राशि</span><span class="result-value" id="fd-maturity">₹0</span></div>
+            <div class="result-card"><span class="result-label" data-en="Principal Invested" data-hi="निवेशित मूलधन">निवेशित मूलधन</span><span class="result-value" id="fd-principal">₹0</span></div>
+            <div class="result-card amber-light"><span class="result-label" data-en="Total Interest Earned" data-hi="कुल ब्याज अर्जित">कुल ब्याज अर्जित</span><span class="result-value" id="fd-interest">₹0</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="fd-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('fd')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- RECURRING DEPOSIT -->
+    <article id="rd-calc" class="calc-card sub-section">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <h3><span class="h3-pill amber" aria-hidden="true">📆</span><span data-en="Recurring Deposit Calculator" data-hi="रिकरिंग डिपॉज़िट कैलकुलेटर">रिकरिंग डिपॉज़िट कैलकुलेटर</span></h3>
+          <div class="input-group">
+            <label for="rd-amount"><span data-en="Monthly Deposit (₹)" data-hi="मासिक जमा राशि (₹)">मासिक जमा राशि (₹)</span><span class="lv" id="rd-amount-disp">₹5,000</span></label>
+            <input type="number" id="rd-amount" value="5000" min="100" max="1000000" step="500" />
+            <input type="range"  id="rd-amount-range" min="100" max="1000000" step="500" value="5000" />
+          </div>
+          <div class="input-group">
+            <label for="rd-rate"><span data-en="Interest Rate (% p.a.)" data-hi="ब्याज दर (% प्रति वर्ष)">ब्याज दर (% प्रति वर्ष)</span><span class="lv" id="rd-rate-disp">6.5%</span></label>
+            <input type="number" id="rd-rate" value="6.5" min="1" max="15" step="0.1" />
+            <input type="range"  id="rd-rate-range" min="1" max="15" step="0.1" value="6.5" />
+          </div>
+          <div class="input-group">
+            <label for="rd-tenure"><span data-en="Tenure (Years)" data-hi="अवधि (वर्ष)">अवधि (वर्ष)</span><span class="lv" id="rd-tenure-disp">3 yrs</span></label>
+            <input type="number" id="rd-tenure" value="3" min="1" max="10" step="1" />
+            <input type="range"  id="rd-tenure-range" min="1" max="10" step="1" value="3" />
+          </div>
+          <div class="rate-hint amber"><span data-en="💡 SBI RD rates: 6.50%–7.10% | Post Office RD: 6.70% | HDFC RD: 7.00%–7.25%" data-hi="💡 SBI RD दरें: 6.50%–7.10% | पोस्ट ऑफिस RD: 6.70% | HDFC RD: 7.00%–7.25%">💡 SBI RD दरें: 6.50%–7.10% | पोस्ट ऑफिस RD: 6.70% | HDFC RD: 7.00%–7.25%</span></div>
+          <button class="calc-btn amber" onclick="calcRD()" data-en="Calculate RD Maturity" data-hi="RD मैच्योरिटी कैलकुलेट करें">RD मैच्योरिटी कैलकुलेट करें</button>
+        </div>
+        <div class="calc-results" aria-live="polite">
+          <h3><span class="h3-pill amber" aria-hidden="true">📊</span><span data-en="RD Maturity Details" data-hi="RD मैच्योरिटी विवरण">RD मैच्योरिटी विवरण</span></h3>
+          <div class="result-cards">
+            <div class="result-card primary amber"><span class="result-label" data-en="Maturity Amount" data-hi="मैच्योरिटी राशि">मैच्योरिटी राशि</span><span class="result-value" id="rd-maturity">₹0</span></div>
+            <div class="result-card"><span class="result-label" data-en="Total Deposited" data-hi="कुल जमा राशि">कुल जमा राशि</span><span class="result-value" id="rd-deposited">₹0</span></div>
+            <div class="result-card amber-light"><span class="result-label" data-en="Total Interest Earned" data-hi="कुल ब्याज अर्जित">कुल ब्याज अर्जित</span><span class="result-value" id="rd-interest">₹0</span></div>
+          </div>
+          <div class="chart-wrap"><canvas id="rd-chart"></canvas></div>
+          <div class="share-row"><button class="share-btn" onclick="shareResult('rd')" data-en="📋 Copy Result" data-hi="📋 परिणाम कॉपी करें">📋 परिणाम कॉपी करें</button></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ── BANK RATES SECTION ── -->
+  <section id="rates-section" class="calc-section" aria-label="Indian Bank Interest Rates">
+    <div class="section-header">
+      <h2 data-en="Indian Bank Interest Rates" data-hi="भारतीय बैंक ब्याज दरें">भारतीय बैंक ब्याज दरें</h2>
+      <p data-en="Indicative rates 2024–25 — always verify with your bank" data-hi="2024-25 की अनुमानित दरें — आवेदन से पहले बैंक से सत्यापित करें">2024-25 की अनुमानित दरें — आवेदन से पहले बैंक से सत्यापित करें</p>
+    </div>
+    <!-- Rates sub-navigation -->
+    <div class="rates-sub-tabs">
+      <button class="rates-sub-tab active" data-rates-panel="loan-rates" data-en="🏦 Loan Rates" data-hi="🏦 लोन दरें">🏦 लोन दरें</button>
+      <button class="rates-sub-tab" data-rates-panel="fd-rates"   data-en="🔒 FD Rates"   data-hi="🔒 FD दरें">🔒 FD दरें</button>
+      <button class="rates-sub-tab" data-rates-panel="rd-rates"   data-en="📆 RD Rates"   data-hi="📆 RD दरें">📆 RD दरें</button>
+    </div>
+
+    <div id="loan-rates" class="rates-panel active">
+      <div class="rates-grid" id="loan-rates-grid"></div>
+    </div>
+    <div id="fd-rates" class="rates-panel">
+      <div class="rates-grid" id="fd-rates-grid"></div>
+    </div>
+    <div id="rd-rates" class="rates-panel">
+      <div class="rates-grid" id="rd-rates-grid"></div>
+    </div>
+
+    <div class="rates-note">
+      <span data-en="⚠️ Rates are indicative and subject to change. Always verify with the bank directly before taking any loan or investment decision." data-hi="⚠️ दरें सांकेतिक हैं और बदल सकती हैं। किसी भी निर्णय से पहले सीधे बैंक से सत्यापित करें।">⚠️ दरें सांकेतिक हैं और बदल सकती हैं। किसी भी निर्णय से पहले सीधे बैंक से सत्यापित करें।</span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <p data-en="© 2025 Universal Finance Calculator by Amit Godwin Kullu. For educational purposes only." data-hi="© 2025 अमित गॉडविन कुल्लू द्वारा यूनिवर्सल फाइनेंस कैलकुलेटर। केवल शैक्षिक उद्देश्यों के लिए।">
+      © 2025 अमित गॉडविन कुल्लू द्वारा यूनिवर्सल फाइनेंस कैलकुलेटर। केवल शैक्षिक उद्देश्यों के लिए।
+    </p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── Chart.js readiness gate ── */
+function whenReady(cb) {
+  if (typeof Chart !== 'undefined') { cb(); return; }
+  const id = setInterval(() => { if (typeof Chart !== 'undefined') { clearInterval(id); cb(); } }, 40);
+}
+
+/* ════════════════════════════════════
+   BANK DATA
+   ════════════════════════════════════ */
+const bankRates = [
+  { name:'SBI',        emoji:'🏛️', color:'#3b82f6', bg:'rgba(59,130,246,.14)',
+    rates:[{type:'Home Loan',typeHi:'होम लोन',val:'8.50%–9.85%'},{type:'Car Loan',typeHi:'कार लोन',val:'8.75%–9.80%'},{type:'Personal Loan',typeHi:'पर्सनल लोन',val:'11.05%–14.00%'},{type:'Education Loan',typeHi:'एजुकेशन लोन',val:'8.15%–10.05%'}]},
+  { name:'HDFC Bank',  emoji:'🔷', color:'#ef4444', bg:'rgba(239,68,68,.14)',
+    rates:[{type:'Home Loan',typeHi:'होम लोन',val:'8.70%–9.95%'},{type:'Car Loan',typeHi:'कार लोन',val:'8.80%–9.90%'},{type:'Personal Loan',typeHi:'पर्सनल लोन',val:'10.50%–21.00%'},{type:'Education Loan',typeHi:'एजुकेशन लोन',val:'9.50%–13.25%'}]},
+  { name:'ICICI Bank', emoji:'🟠', color:'#f97316', bg:'rgba(249,115,22,.14)',
+    rates:[{type:'Home Loan',typeHi:'होम लोन',val:'8.75%–10.05%'},{type:'Car Loan',typeHi:'कार लोन',val:'8.75%–9.80%'},{type:'Personal Loan',typeHi:'पर्सनल लोन',val:'10.65%–16.00%'},{type:'Education Loan',typeHi:'एजुकेशन लोन',val:'9.00%–11.50%'}]},
+  { name:'Axis Bank',  emoji:'🟣', color:'#8b5cf6', bg:'rgba(139,92,246,.14)',
+    rates:[{type:'Home Loan',typeHi:'होम लोन',val:'8.75%–9.65%'},{type:'Car Loan',typeHi:'कार लोन',val:'8.80%–9.80%'},{type:'Personal Loan',typeHi:'पर्सनल लोन',val:'10.25%–22.00%'},{type:'Education Loan',typeHi:'एजुकेशन लोन',val:'13.70%–15.20%'}]},
+  { name:'PNB',        emoji:'🟤', color:'#d97706', bg:'rgba(217,119,6,.14)',
+    rates:[{type:'Home Loan',typeHi:'होम लोन',val:'8.45%–10.25%'},{type:'Car Loan',typeHi:'कार लोन',val:'8.75%–9.75%'},{type:'Personal Loan',typeHi:'पर्सनल लोन',val:'10.40%–16.95%'},{type:'Education Loan',typeHi:'एजुकेशन लोन',val:'8.15%–10.55%'}]}
+];
+
+const fdRates = [
+  { name:'SBI',           emoji:'🏛️', color:'#3b82f6', bg:'rgba(59,130,246,.14)',
+    rates:[{type:'1 Year',typeHi:'1 वर्ष',val:'6.80%'},{type:'2 Years',typeHi:'2 वर्ष',val:'7.00%'},{type:'3 Years',typeHi:'3 वर्ष',val:'6.75%'},{type:'5 Years',typeHi:'5 वर्ष',val:'6.50%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'HDFC Bank',     emoji:'🔷', color:'#ef4444', bg:'rgba(239,68,68,.14)',
+    rates:[{type:'1 Year',typeHi:'1 वर्ष',val:'7.10%'},{type:'2 Years',typeHi:'2 वर्ष',val:'7.25%'},{type:'3 Years',typeHi:'3 वर्ष',val:'7.00%'},{type:'5 Years',typeHi:'5 वर्ष',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'ICICI Bank',    emoji:'🟠', color:'#f97316', bg:'rgba(249,115,22,.14)',
+    rates:[{type:'1 Year',typeHi:'1 वर्ष',val:'7.00%'},{type:'2 Years',typeHi:'2 वर्ष',val:'7.15%'},{type:'3 Years',typeHi:'3 वर्ष',val:'7.00%'},{type:'5 Years',typeHi:'5 वर्ष',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'Post Office',   emoji:'📮', color:'#10b981', bg:'rgba(16,185,129,.14)',
+    rates:[{type:'1 Year',typeHi:'1 वर्ष',val:'6.90%'},{type:'2 Years',typeHi:'2 वर्ष',val:'7.00%'},{type:'3 Years',typeHi:'3 वर्ष',val:'7.10%'},{type:'5 Years',typeHi:'5 वर्ष',val:'7.50%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'Same Rate'}]},
+  { name:'Axis Bank',     emoji:'🟣', color:'#8b5cf6', bg:'rgba(139,92,246,.14)',
+    rates:[{type:'1 Year',typeHi:'1 वर्ष',val:'7.10%'},{type:'2 Years',typeHi:'2 वर्ष',val:'7.25%'},{type:'3 Years',typeHi:'3 वर्ष',val:'7.10%'},{type:'5 Years',typeHi:'5 वर्ष',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]}
+];
+
+const rdRates = [
+  { name:'SBI',           emoji:'🏛️', color:'#3b82f6', bg:'rgba(59,130,246,.14)',
+    rates:[{type:'1 Year RD',typeHi:'1 वर्ष RD',val:'6.80%'},{type:'2 Years RD',typeHi:'2 वर्ष RD',val:'7.00%'},{type:'3 Years RD',typeHi:'3 वर्ष RD',val:'6.75%'},{type:'5 Years RD',typeHi:'5 वर्ष RD',val:'6.50%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'HDFC Bank',     emoji:'🔷', color:'#ef4444', bg:'rgba(239,68,68,.14)',
+    rates:[{type:'1 Year RD',typeHi:'1 वर्ष RD',val:'7.10%'},{type:'2 Years RD',typeHi:'2 वर्ष RD',val:'7.25%'},{type:'3 Years RD',typeHi:'3 वर्ष RD',val:'7.00%'},{type:'5 Years RD',typeHi:'5 वर्ष RD',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'Post Office',   emoji:'📮', color:'#10b981', bg:'rgba(16,185,129,.14)',
+    rates:[{type:'5 Year RD',typeHi:'5 वर्ष RD',val:'6.70%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'Same Rate'}]},
+  { name:'ICICI Bank',    emoji:'🟠', color:'#f97316', bg:'rgba(249,115,22,.14)',
+    rates:[{type:'1 Year RD',typeHi:'1 वर्ष RD',val:'7.00%'},{type:'2 Years RD',typeHi:'2 वर्ष RD',val:'7.15%'},{type:'3 Years RD',typeHi:'3 वर्ष RD',val:'7.00%'},{type:'5 Years RD',typeHi:'5 वर्ष RD',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]},
+  { name:'Axis Bank',     emoji:'🟣', color:'#8b5cf6', bg:'rgba(139,92,246,.14)',
+    rates:[{type:'1 Year RD',typeHi:'1 वर्ष RD',val:'7.10%'},{type:'2 Years RD',typeHi:'2 वर्ष RD',val:'7.25%'},{type:'3 Years RD',typeHi:'3 वर्ष RD',val:'7.10%'},{type:'5 Years RD',typeHi:'5 वर्ष RD',val:'7.00%'},{type:'Senior Citizen',typeHi:'वरिष्ठ नागरिक',val:'+0.50%'}]}
+];
+
+/* ════════════════════════════════════
+   THEME — default LIGHT
+   ════════════════════════════════════ */
+let darkMode = false;
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  darkMode = !darkMode;
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+  document.querySelector('.theme-icon').textContent = darkMode ? '🌙' : '☀️';
+  document.getElementById('themeLabel').textContent  = darkMode ? 'Dark' : 'Light';
+  document.getElementById('themeColorMeta').content  = darkMode ? '#080c18' : '#f4f7ff';
+  // update all chart colours without destroying instances
+  const { text, border } = getChartColors();
+  Object.values(chartInstances).forEach(c => {
+    if (!c) return;
+    c.data.datasets[0].borderColor = border;
+    c.options.plugins.legend.labels.color = text;
+    c.update('none');
+  });
+});
+
+/* ════════════════════════════════════
+   LANGUAGE — default HINDI
+   ════════════════════════════════════ */
+let currentLang = 'hi';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.body.dataset.lang = lang;
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const v = el.dataset[lang === 'hi' ? 'hi' : 'en'];
+    if (v) el.textContent = v;
+  });
+  // update select options
+  document.querySelectorAll('select option[data-en]').forEach(opt => {
+    const v = opt.dataset[lang === 'hi' ? 'hi' : 'en'];
+    if (v) opt.textContent = v;
+  });
+  document.querySelector('.lang-flag').textContent = lang === 'hi' ? '🇮🇳' : '🇬🇧';
+  document.getElementById('langLabel').textContent  = lang === 'hi' ? 'हिं' : 'EN';
+  renderBankRates();
+}
+
+document.getElementById('langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'hi' : 'en'));
+
+/* ════════════════════════════════════
+   TAB ROUTING
+   ════════════════════════════════════ */
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    tab.classList.add('active'); tab.setAttribute('aria-selected','true');
+    document.querySelectorAll('.calc-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(tab.dataset.tab + '-section').classList.add('active');
+  });
+});
+
+document.querySelectorAll('.sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const p = tab.closest('.calc-section');
+    p.querySelectorAll('.sub-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    tab.classList.add('active'); tab.setAttribute('aria-selected','true');
+    p.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+    document.getElementById(tab.dataset.sub).classList.add('active');
+  });
+});
+
+/* Rates sub-tab routing */
+document.querySelectorAll('.rates-sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.rates-sub-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.rates-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(tab.dataset.ratesPanel).classList.add('active');
+  });
+});
+
+/* ════════════════════════════════════
+   HELPERS
+   ════════════════════════════════════ */
+const fmt = n => isNaN(n) || n < 0 ? '₹0' : '₹' + Math.round(n).toLocaleString('en-IN');
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function setVal(id, text) {
+  const el = document.getElementById(id);
+  if (!el || el.textContent === text) return;
+  el.textContent = text;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function pulse(prefix) {
+  const ids = [prefix+'-emi', prefix+'-final', prefix+'-eligible', prefix+'-maturity'];
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const card = el.closest('.result-card.primary');
+    if (!card) continue;
+    card.classList.remove('pulsing');
+    void card.offsetWidth;
+    card.classList.add('pulsing');
+    setTimeout(() => card.classList.remove('pulsing'), 700);
+    break;
+  }
+}
+
+function fillRange(r) {
+  const pct = ((+r.value - +r.min) / (+r.max - +r.min)) * 100;
+  r.style.background = `linear-gradient(to right,var(--acc-d) ${pct}%,var(--inp) ${pct}%)`;
+}
+
+/* ════════════════════════════════════
+   LIVE INPUT SYNC
+   ════════════════════════════════════ */
+function syncInputs(numId, rangeId, dispId, fmtFn, liveCalc) {
+  const num = document.getElementById(numId);
+  const rng = document.getElementById(rangeId);
+  const dp  = document.getElementById(dispId);
+  if (!num || !rng || !dp) return;
+
+  function upd(v) {
+    v = parseFloat(v);
+    if (isNaN(v)) return;
+    num.value = v; rng.value = v;
+    dp.textContent = fmtFn(v);
+    fillRange(rng);
+    liveCalc && liveCalc();
+  }
+
+  num.addEventListener('input', () => upd(num.value));
+  rng.addEventListener('input', () => upd(rng.value));
+  upd(num.value);
+}
+
+const rupeeFmt = v => '₹' + parseInt(v).toLocaleString('en-IN');
+const pctFmt   = v => parseFloat(v).toFixed(1) + '%';
+const yrFmt    = v => parseInt(v) + ' yrs';
+
+syncInputs('hl-amount','hl-amount-range','hl-amount-disp', rupeeFmt, () => calcLoan('hl'));
+syncInputs('hl-rate',  'hl-rate-range',  'hl-rate-disp',   pctFmt,   () => calcLoan('hl'));
+syncInputs('hl-tenure','hl-tenure-range','hl-tenure-disp', yrFmt,    () => calcLoan('hl'));
+
+syncInputs('pl-amount','pl-amount-range','pl-amount-disp', rupeeFmt, () => calcLoan('pl'));
+syncInputs('pl-rate',  'pl-rate-range',  'pl-rate-disp',   pctFmt,   () => calcLoan('pl'));
+syncInputs('pl-tenure','pl-tenure-range','pl-tenure-disp', yrFmt,    () => calcLoan('pl'));
+
+syncInputs('cl-amount','cl-amount-range','cl-amount-disp', rupeeFmt, () => calcLoan('cl'));
+syncInputs('cl-rate',  'cl-rate-range',  'cl-rate-disp',   pctFmt,   () => calcLoan('cl'));
+syncInputs('cl-tenure','cl-tenure-range','cl-tenure-disp', yrFmt,    () => calcLoan('cl'));
+
+syncInputs('el-income','el-income-range','el-income-disp', rupeeFmt, calcEligibility);
+syncInputs('el-emi',   'el-emi-range',   'el-emi-disp',    rupeeFmt, calcEligibility);
+syncInputs('el-rate',  'el-rate-range',  'el-rate-disp',   pctFmt,   calcEligibility);
+syncInputs('el-tenure','el-tenure-range','el-tenure-disp', yrFmt,    calcEligibility);
+
+syncInputs('sip-amount','sip-amount-range','sip-amount-disp', rupeeFmt, calcSIP);
+syncInputs('sip-rate',  'sip-rate-range',  'sip-rate-disp',   pctFmt,   calcSIP);
+syncInputs('sip-tenure','sip-tenure-range','sip-tenure-disp', yrFmt,    calcSIP);
+
+syncInputs('ls-amount','ls-amount-range','ls-amount-disp', rupeeFmt, calcLumpsum);
+syncInputs('ls-rate',  'ls-rate-range',  'ls-rate-disp',   pctFmt,   calcLumpsum);
+syncInputs('ls-tenure','ls-tenure-range','ls-tenure-disp', yrFmt,    calcLumpsum);
+
+syncInputs('fd-amount','fd-amount-range','fd-amount-disp', rupeeFmt, calcFD);
+syncInputs('fd-rate',  'fd-rate-range',  'fd-rate-disp',   pctFmt,   calcFD);
+syncInputs('fd-tenure','fd-tenure-range','fd-tenure-disp', yrFmt,    calcFD);
+document.getElementById('fd-compound').addEventListener('change', calcFD);
+
+syncInputs('rd-amount','rd-amount-range','rd-amount-disp', rupeeFmt, calcRD);
+syncInputs('rd-rate',  'rd-rate-range',  'rd-rate-disp',   pctFmt,   calcRD);
+syncInputs('rd-tenure','rd-tenure-range','rd-tenure-disp', yrFmt,    calcRD);
+
+/* ════════════════════════════════════
+   CORE MATH
+   ════════════════════════════════════ */
+function calcEMI(P, annualRate, months) {
+  if (!P || P <= 0 || months <= 0) return 0;
+  const r = annualRate / 12 / 100;
+  if (r === 0) return P / months;
+  const f = Math.pow(1 + r, months);
+  return (P * r * f) / (f - 1);
+}
+
+/* ════════════════════════════════════
+   CHART ENGINE — update in-place (no destroy = no flicker)
+   ════════════════════════════════════ */
+const chartInstances = {};
+
+function getChartColors() {
+  return { text: darkMode ? '#94a3b8' : '#475569', border: darkMode ? '#101828' : '#ffffff' };
+}
+
+function upsertChart(id, d1, d2, labels, colors) {
+  const { text, border } = getChartColors();
+  const ex = chartInstances[id];
+
+  if (ex) {
+    ex.data.datasets[0].data       = [d1, d2];
+    ex.data.datasets[0].borderColor = border;
+    ex.data.labels                  = labels;
+    ex.options.plugins.legend.labels.color = text;
+    ex.update(); return;
+  }
+
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+
+  chartInstances[id] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data:[d1,d2], backgroundColor:colors, borderColor:border, borderWidth:3, hoverOffset:10, spacing:2 }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, cutout:'70%',
+      animation:{ duration:480, easing:'easeInOutQuart' },
+      plugins:{
+        legend:{ position:'bottom', labels:{ color:text, font:{family:'DM Sans',size:12,weight:'500'}, padding:16, usePointStyle:true, pointStyleWidth:10 }},
+        tooltip:{ callbacks:{ label: c => '  ₹'+Math.round(c.raw).toLocaleString('en-IN') },
+          backgroundColor: darkMode?'#101828':'#fff',
+          titleColor: darkMode?'#f1f5f9':'#0f172a',
+          bodyColor: darkMode?'#94a3b8':'#475569',
+          borderColor:'rgba(99,102,241,.3)', borderWidth:1, padding:12, cornerRadius:10
+        }
+      }
+    }
+  });
+}
+
+/* ════════════════════════════════════
+   CALCULATORS
+   ════════════════════════════════════ */
+function calcLoan(p) {
+  const amount  = +document.getElementById(p+'-amount').value  || 0;
+  const rate    = +document.getElementById(p+'-rate').value    || 0;
+  const tenure  = +document.getElementById(p+'-tenure').value  || 1;
+  const months  = tenure * 12;
+  const emi     = calcEMI(amount, rate, months);
+  const total   = emi * months;
+  const interest= total - amount;
+
+  setVal(p+'-emi',      fmt(emi));
+  setVal(p+'-interest', fmt(interest));
+  setVal(p+'-total',    fmt(total));
+  pulse(p);
+
+  const lbl = currentLang==='hi' ? ['मूलधन','ब्याज'] : ['Principal','Interest'];
+  whenReady(() => upsertChart(p+'-chart', amount, interest, lbl, ['#6366f1','#22d3ee']));
+}
+
+function calcEligibility() {
+  const income  = +document.getElementById('el-income').value || 0;
+  const existEMI= +document.getElementById('el-emi').value    || 0;
+  const rate    = +document.getElementById('el-rate').value   || 0;
+  const tenure  = +document.getElementById('el-tenure').value || 1;
+  const months  = tenure * 12;
+  const maxEMI  = income * 0.40 - existEMI;
+
+  const bar = document.getElementById('el-bar');
+  if (maxEMI <= 0) {
+    setVal('el-eligible','₹0'); setVal('el-max-emi',fmt(0)); setVal('el-foir','> 40%');
+    if (bar) bar.style.width = '100%'; return;
+  }
+
+  const r = rate / 12 / 100;
+  const principal = r === 0 ? maxEMI*months : (maxEMI*(Math.pow(1+r,months)-1))/(r*Math.pow(1+r,months));
+  const used = Math.min(((existEMI+maxEMI)/income)*100, 100);
+
+  setVal('el-eligible', fmt(principal));
+  setVal('el-max-emi',  fmt(maxEMI));
+  setVal('el-foir',     used.toFixed(1)+'%');
+  pulse('el');
+  if (bar) bar.style.width = used+'%';
+}
+
+function calcSIP() {
+  const monthly = +document.getElementById('sip-amount').value || 0;
+  const rate    = +document.getElementById('sip-rate').value   || 0;
+  const months  = (+document.getElementById('sip-tenure').value || 1) * 12;
+  const r = rate / 12 / 100;
+  const fv = r===0 ? monthly*months : monthly*((Math.pow(1+r,months)-1)/r)*(1+r);
+  const inv = monthly * months;
+
+  setVal('sip-final',    fmt(fv));
+  setVal('sip-invested', fmt(inv));
+  setVal('sip-gain',     fmt(fv-inv));
+  pulse('sip');
+
+  const lbl = currentLang==='hi' ? ['निवेश','रिटर्न'] : ['Invested','Returns'];
+  whenReady(() => upsertChart('sip-chart', inv, fv-inv, lbl, ['#6366f1','#34d399']));
+}
+
+function calcLumpsum() {
+  const P    = +document.getElementById('ls-amount').value  || 0;
+  const rate = +document.getElementById('ls-rate').value    || 0;
+  const yrs  = +document.getElementById('ls-tenure').value  || 1;
+  const fv   = P * Math.pow(1 + rate/100, yrs);
+
+  setVal('ls-final',    fmt(fv));
+  setVal('ls-invested', fmt(P));
+  setVal('ls-gain',     fmt(fv-P));
+  pulse('ls');
+
+  const lbl = currentLang==='hi' ? ['निवेश','रिटर्न'] : ['Invested','Returns'];
+  whenReady(() => upsertChart('ls-chart', P, fv-P, lbl, ['#6366f1','#34d399']));
+}
+
+/* ── FD CALCULATOR ──
+   Formula: A = P × (1 + r/n)^(n×t)
+   P = Principal, r = annual rate (decimal), n = compounding freq/year, t = years */
+function calcFD() {
+  const P = +document.getElementById('fd-amount').value  || 0;
+  const r = (+document.getElementById('fd-rate').value   || 0) / 100;
+  const t = +document.getElementById('fd-tenure').value  || 1;
+  const n = +document.getElementById('fd-compound').value || 4;
+
+  const A        = P * Math.pow(1 + r / n, n * t);
+  const interest = A - P;
+
+  setVal('fd-maturity',  fmt(A));
+  setVal('fd-principal', fmt(P));
+  setVal('fd-interest',  fmt(interest));
+  pulse('fd');
+
+  const lbl = currentLang==='hi' ? ['मूलधन','ब्याज'] : ['Principal','Interest'];
+  whenReady(() => upsertChart('fd-chart', P, interest, lbl, ['#d97706','#fbbf24']));
+}
+
+/* ── RD CALCULATOR ──
+   Standard RD quarterly compounding formula used by Indian banks:
+   Each monthly instalment M earns interest for the remaining months.
+   Maturity = Σ M × (1 + r/4)^(4 × k/12)  for k = n down to 1
+   where n = total months, r = annual rate (decimal)
+   Simplified closed-form:
+   A = M × (1+i)^n × [(1+i)^(1/3) - 1] / [(1+i) - 1]
+   where i = r/4 (quarterly rate), n = quarters
+   We use the month-by-month sum for precision. */
+function calcRD() {
+  const M     = +document.getElementById('rd-amount').value  || 0;
+  const r     = (+document.getElementById('rd-rate').value   || 0) / 100;
+  const years = +document.getElementById('rd-tenure').value  || 1;
+  const n     = years * 12; // total months
+
+  // Monthly compounding RD: each deposit earns compound interest for remaining months
+  const rMonthly = r / 12;
+  let maturity = 0;
+  for (let k = 1; k <= n; k++) {
+    // deposit made at month k earns interest for (n - k + 1) months
+    maturity += M * Math.pow(1 + rMonthly, n - k + 1);
+  }
+
+  const totalDeposited = M * n;
+  const interest       = maturity - totalDeposited;
+
+  setVal('rd-maturity',  fmt(maturity));
+  setVal('rd-deposited', fmt(totalDeposited));
+  setVal('rd-interest',  fmt(interest));
+  pulse('rd');
+
+  const lbl = currentLang==='hi' ? ['जमा राशि','ब्याज'] : ['Deposited','Interest'];
+  whenReady(() => upsertChart('rd-chart', totalDeposited, interest, lbl, ['#d97706','#fbbf24']));
+}
+
+/* ════════════════════════════════════
+   SHARE / COPY
+   ════════════════════════════════════ */
+function shareResult(prefix) {
+  const map = {
+    hl: { label:'Home Loan',       pairs:[['Monthly EMI','hl-emi'],['Total Interest','hl-interest'],['Total Payment','hl-total']] },
+    pl: { label:'Personal Loan',   pairs:[['Monthly EMI','pl-emi'],['Total Interest','pl-interest'],['Total Payment','pl-total']] },
+    cl: { label:'Car Loan',        pairs:[['Monthly EMI','cl-emi'],['Total Interest','cl-interest'],['Total Payment','cl-total']] },
+    el: { label:'Loan Eligibility',pairs:[['Eligible Amount','el-eligible'],['Max EMI','el-max-emi'],['FOIR Used','el-foir']] },
+    sip:{ label:'SIP Investment',  pairs:[['Final Value','sip-final'],['Total Invested','sip-invested'],['Wealth Gained','sip-gain']] },
+    ls: { label:'Lumpsum',         pairs:[['Final Value','ls-final'],['Total Invested','ls-invested'],['Wealth Gained','ls-gain']] },
+    fd: { label:'Fixed Deposit',   pairs:[['Maturity Amount','fd-maturity'],['Principal','fd-principal'],['Interest Earned','fd-interest']] },
+    rd: { label:'Recurring Deposit',pairs:[['Maturity Amount','rd-maturity'],['Total Deposited','rd-deposited'],['Interest Earned','rd-interest']] }
+  };
+  const d = map[prefix]; if (!d) return;
+  const line = '─'.repeat(40);
+  let text = `📊 ${d.label} — Universal Finance Calculator\n${line}\n`;
+  d.pairs.forEach(([label,id]) => {
+    const el = document.getElementById(id);
+    if (el) text += `${label}: ${el.textContent}\n`;
+  });
+  text += `\nCalculated at: ${window.location.href}`;
+
+  navigator.clipboard.writeText(text)
+    .then(() => showToast(currentLang==='hi' ? '✅ परिणाम कॉपी किया गया!' : '✅ Result copied to clipboard!'))
+    .catch(() => {
+      const ta = Object.assign(document.createElement('textarea'),{value:text,style:'position:fixed;opacity:0'});
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      showToast(currentLang==='hi' ? '✅ कॉपी किया गया!' : '✅ Copied!');
+    });
+}
+
+/* ════════════════════════════════════
+   BANK RATES RENDER
+   ════════════════════════════════════ */
+function renderBankCardGrid(gridId, data, amberVal) {
+  const g = document.getElementById(gridId);
+  if (!g) return;
+  g.innerHTML = data.map((bank,i) => `
+    <article class="bank-card" style="animation-delay:${i*.06}s">
+      <div class="bank-header">
+        <div class="bank-logo" style="background:${bank.bg};color:${bank.color}">${bank.emoji}</div>
+        <div class="bank-name" style="color:${bank.color}">${bank.name}</div>
+      </div>
+      <div class="bank-rates-list">
+        ${bank.rates.map(r=>`
+          <div class="bank-rate-row">
+            <span class="rate-type">${currentLang==='hi'?r.typeHi:r.type}</span>
+            <span class="rate-val${amberVal?' amber':''}">${r.val}</span>
+          </div>`).join('')}
+      </div>
+    </article>`).join('');
+}
+
+function renderBankRates() {
+  renderBankCardGrid('loan-rates-grid', bankRates, false);
+  renderBankCardGrid('fd-rates-grid',   fdRates,   true);
+  renderBankCardGrid('rd-rates-grid',   rdRates,   true);
+}
+
+/* ════════════════════════════════════
+   INIT
+   ════════════════════════════════════ */
+function init() {
+  // Apply Hindi language on load
+  setLang('hi');
+  renderBankRates();
+  calcLoan('hl'); calcLoan('pl'); calcLoan('cl');
+  calcEligibility(); calcSIP(); calcLumpsum();
+  calcFD(); calcRD();
+}
+whenReady(init);
+
+/* ════════════════════════════════════
+   PWA
+   ════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
